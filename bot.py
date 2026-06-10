@@ -2,7 +2,6 @@ import asyncio
 import logging
 import threading
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from datetime import datetime, time
 import pytz
 from telegram.ext import Application, CommandHandler, PollAnswerHandler
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -13,29 +12,38 @@ from jobs import send_poll, check_poll_votes, remind_unpaid
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Простой веб-сервер чтобы Render не усыплял сервис
+ADMIN_ID = 937117147
+
 class HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
         self.end_headers()
         self.wfile.write(b"OK")
     def log_message(self, format, *args):
-        pass  # Не засорять логи
+        pass
 
 def run_health_server():
     server = HTTPServer(("0.0.0.0", 8080), HealthHandler)
     server.serve_forever()
 
 async def start_command(update, context):
+    if update.effective_user.id != ADMIN_ID:
+        return
     await update.message.reply_text("Бот активен. Используй /poll, /check_votes, /remind_payment")
 
 async def manual_poll(update, context):
+    if update.effective_user.id != ADMIN_ID:
+        return
     await send_poll(context.application)
 
 async def manual_check(update, context):
+    if update.effective_user.id != ADMIN_ID:
+        return
     await check_poll_votes(context.application)
 
 async def manual_remind(update, context):
+    if update.effective_user.id != ADMIN_ID:
+        return
     await remind_unpaid(context.application)
 
 async def handle_poll_answer(update, context):
@@ -48,7 +56,6 @@ async def handle_poll_answer(update, context):
         logger.info(f"User {user_id} voted")
 
 def main():
-    # Запускаем веб-сервер в фоне
     thread = threading.Thread(target=run_health_server, daemon=True)
     thread.start()
     logger.info("Health server запущен на порту 8080")
@@ -65,21 +72,18 @@ def main():
 
     scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
 
-    # Каждое воскресенье в 12:00 МСК — публикуем опрос
     scheduler.add_job(
         send_poll, "cron",
         day_of_week="sun", hour=12, minute=0,
         args=[app]
     )
 
-    # Каждое воскресенье с 17:00 каждые 2 часа — дёргаем не проголосовавших
     scheduler.add_job(
         check_poll_votes, "cron",
         day_of_week="sun", hour="17-23", minute=0,
         args=[app]
     )
 
-    # Каждый день с 1 по 28 число в 8:00 МСК — напоминаем об оплате
     scheduler.add_job(
         remind_unpaid, "cron",
         day="1-28", hour=8, minute=0,
