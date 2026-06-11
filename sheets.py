@@ -20,9 +20,11 @@ def get_sheet():
 
 def get_players():
     sheet = get_sheet()
-    records = sheet.get_all_records()
+    raw = sheet.get_all_records()
+    records = [{k.strip(): v for k, v in r.items()} for r in raw]
     logger.info(f"Все записи из таблицы: {records}")
     return [r for r in records if str(r.get("role", "")).strip() == "player"]
+   
 
 def get_unpaid_players():
     players = get_players()
