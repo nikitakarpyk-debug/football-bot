@@ -65,9 +65,9 @@ def main():
     app.bot_data["current_poll_id"] = None
 
     app.add_handler(CommandHandler("start", start_command))
-    app.add_handler(CommandHandler("poll", manual_poll))
-    app.add_handler(CommandHandler("check_votes", manual_check))
-    app.add_handler(CommandHandler("remind_payment", manual_remind))
+    app.add_handler(CommandHandler("opros", manual_poll))
+app.add_handler(CommandHandler("golosyem", manual_check))
+app.add_handler(CommandHandler("sday_babki", manual_remind))
     app.add_handler(PollAnswerHandler(handle_poll_answer))
 
     scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
