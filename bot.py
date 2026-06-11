@@ -29,7 +29,7 @@ def run_health_server():
 async def start_command(update, context):
     if update.effective_user.id != ADMIN_ID:
         return
-    await update.message.reply_text("Бот активен. Используй /poll, /check_votes, /remind_payment")
+    await update.message.reply_text("Бот активен. Используй /opros, /golosyem, /sday_babki")
 
 async def manual_poll(update, context):
     if update.effective_user.id != ADMIN_ID:
