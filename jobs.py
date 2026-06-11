@@ -11,7 +11,7 @@ async def send_poll(app):
         app.bot_data["poll_sent_at"] = datetime.now(MOSCOW_TZ)
         message = await app.bot.send_poll(
             chat_id=CHAT_ID,
-            question="⚽️ Играешь в футбол во вторник?",
+            question="⚽️ Эй, тушки! Вторник не отменили, поле забронировано. Голосуйте кто придёт.",
             options=["✅ Да, буду", "❌ Нет, не смогу"],
             is_anonymous=False
         )
@@ -38,10 +38,7 @@ async def check_poll_votes(app):
         if not not_voted_mentions:
             return
         mentions = " ".join(not_voted_mentions)
-        text = (
-            f"🔔 Эй, {mentions}\n\n"
-            f"Проголосуйте в опросе выше — играете во вторник или нет?\n"
-            f"Не молчите, нам важно знать состав! ⚽️"
+        text = f"🔔 {mentions} Игрочишки, ну вы серьёзно? Весь чат проголосовал, а вы как немые."
         )
         await app.bot.send_message(chat_id=CHAT_ID, text=text)
         logger.info(f"Напомнили {len(not_voted_mentions)} игрокам")
