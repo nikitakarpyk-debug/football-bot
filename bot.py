@@ -66,8 +66,8 @@ def main():
 
     app.add_handler(CommandHandler("start", start_command))
     app.add_handler(CommandHandler("opros", manual_poll))
-app.add_handler(CommandHandler("golosyem", manual_check))
-app.add_handler(CommandHandler("sday_babki", manual_remind))
+    app.add_handler(CommandHandler("golosyem", manual_check))
+    app.add_handler(CommandHandler("sday_babki", manual_remind))
     app.add_handler(PollAnswerHandler(handle_poll_answer))
 
     scheduler = AsyncIOScheduler(timezone=MOSCOW_TZ)
