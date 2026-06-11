@@ -68,9 +68,9 @@ async def remind_unpaid(app):
             logger.info("Нет юзернеймов для упоминания")
             return
         text = (
-            f"💰 {' '.join(mentions)}\n\n"
-            f"Напоминаю об оплате за поле в этом месяце.\n"
-            f"Скиньте деньги как можно скорее 🙏"
+    f"⚽️ {' '.join(mentions)}\n\n"
+    f"Поле не благотворительность. Вы не Месси чтобы играть бесплатно. Скидывайте бабки."
+)
         )
         await app.bot.send_message(chat_id=CHAT_ID, text=text)
         logger.info(f"Напомнили об оплате: {mentions}")
