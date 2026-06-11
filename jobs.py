@@ -39,7 +39,6 @@ async def check_poll_votes(app):
             return
         mentions = " ".join(not_voted_mentions)
         text = f"🔔 {mentions} Игрочишки, ну вы серьёзно? Весь чат проголосовал, а вы как немые."
-        )
         await app.bot.send_message(chat_id=CHAT_ID, text=text)
         logger.info(f"Напомнили {len(not_voted_mentions)} игрокам")
     except Exception as e:
@@ -64,13 +63,8 @@ async def remind_unpaid(app):
         if not mentions:
             logger.info("Нет юзернеймов для упоминания")
             return
-        text = (
-    f"⚽️ {' '.join(mentions)}\n\n"
-    f"Поле не благотворительность. Вы не Месси чтобы играть бесплатно. Скидывайте бабки."
-)
-        )
+        text = f"⚽️ {' '.join(mentions)}\n\nПоле не благотворительность. Вы не Месси чтобы играть бесплатно. Скидывайте бабки."
         await app.bot.send_message(chat_id=CHAT_ID, text=text)
         logger.info(f"Напомнили об оплате: {mentions}")
     except Exception as e:
         logger.error(f"Ошибка при напоминании об оплате: {e}", exc_info=True)
-        
